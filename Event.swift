@@ -26,46 +26,10 @@ class Event: NSObject{
         self.period = period
     }
     
-    private var title : String {
-        set(newTitle){
-            self.title = newTitle
-        }
-        get{
-            return self.title
-        }
-    }
-    private var color : UIColor{
-        set(newColor){
-            self.color = newColor
-        }
-        get{
-            return self.color
-        }
-    }
-    private var startTime : String{
-        set(newStartTime){
-            self.startTime = newStartTime
-        }
-        get{
-            return self.startTime
-        }
-    }
-    private var endTime : String{
-        set(newEndTime){
-            self.endTime = newEndTime
-        }
-        get{
-            return self.endTime
-        }
-    }
-    
-    private var period: String{
-        set(newPeriod){
-            self.period = newPeriod
-        }
-        get{
-            return self.period
-        }
-    }
+    var title : String
+    var color : UIColor
+    var startTime : String
+    var endTime : String
+    var period: String
 
 }

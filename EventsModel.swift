@@ -17,6 +17,7 @@ class EventsModel: NSObject{
     override init(){
         events = [String:[Event]]()
         currentIndex = 0
+        let e1 = Event(title: "Test", color: UIColor.green, startTime: "12:30", endTime: "1:30", period: "pm")
         
     }
     
@@ -24,4 +25,10 @@ class EventsModel: NSObject{
         
     }
     
+    func getEvents(date:String) -> [Event]?{
+        return UserDefaults.standard.object(forKey: date) as? [Event]
+    }
+    //reading the event for the day
+    //adding event for a day
+    //USerDefaults.standard.set(Object: x, forKey: Y)
 }
