@@ -64,6 +64,7 @@ class EventsOfDayTableViewController: UITableViewController {
         let tableCellText = e1.title
         let detailTableCellText = e1.startTime
         cell.detailTextLabel?.text = detailTableCellText
+        cell.detailTextLabel?.textColor = UIColor.black
         cell.textLabel?.text = tableCellText
         //cell.textLabel?.textColor = UIColor.white
         print("what is the start time? \(e1.startTime)" )
