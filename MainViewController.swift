@@ -20,17 +20,18 @@ class MainViewController: UIViewController{
     @IBOutlet weak var monthLabel: UILabel!
     
     var desiredDate = ""
+    var currentDate = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let today = Date()
+        let weekday = Calendar.current.component(.weekday, from: today)
+        let month = Calendar.current.component(.month, from: today)
+        let date = Calendar.current.component(.day, from: today)
         
-//        let day = Date()
-//        let month = Date()
-//        var dateArr = [Date]()
-//        dateArr.append(day)
-//        
-//        JTC.scrollToDate(Date())
-//        self.monthLabel.text = JTC.monthStatus(for: month)
+        
+        //label1.text = Calendar.current.weekdaySymbols[weekday-1]
+        self.monthLabel.text = "\(Calendar.current.shortMonthSymbols[month-1])"
         
         // Do any additional setup after loading the view.
     }
@@ -41,10 +42,12 @@ class MainViewController: UIViewController{
         // Dispose of any resources that can be recreated.
     }
     
+    //log the user out and returns to home screen
     @IBAction func logOut(_ sender: Any) {
         try! Auth.auth().signOut()
         self.dismiss(animated: false, completion: nil)
     }
+    
 }
 
 extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource{
@@ -78,16 +81,17 @@ extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         let cell = cell as! CustomCell
         cell.backgroundColor = UIColor.magenta
-        self.desiredDate = formatter.dateFormat
+        self.desiredDate = String(describing: date)
+        //self.desiredDate = formatter.dateFormat
         print("what is the desired date? \(self.desiredDate) or what is the date in the func? \(date)")
         checkForExistingEvents()
     }
     
     func checkForExistingEvents(){
         if (model.numberEventsOnDay(date: self.desiredDate) == 0){
-            self.seeEventButton.isEnabled = true
-        }else{
             self.seeEventButton.isEnabled = false
+        }else{
+            self.seeEventButton.isEnabled = true //FOR TESTING CHANGE TO FALSE
         }
     }
     
@@ -107,11 +111,12 @@ extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destSeeEventsVC = segue.destination as! EventsOfDayTableViewController
-        
-        destSeeEventsVC.selectedDate = self.desiredDate
+        if segue.identifier == "EventsOfDay"{
+            let nav = segue.destination as! UINavigationController
+            let destSeeEventsVC = nav.topViewController as! EventsOfDayTableViewController
+            destSeeEventsVC.selectedDate = self.desiredDate
+        }
     }
-    
     
 }
     
