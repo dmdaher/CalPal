@@ -11,11 +11,15 @@ import Firebase
 import JTAppleCalendar
 
 class MainViewController: UIViewController{
+    let model:EventsModel = EventsModel.sharedInstance
     let formatter = DateFormatter()
     @IBOutlet weak var JTC: JTAppleCalendarView!
     
+    @IBOutlet weak var seeEventButton: UIButton!
     @IBOutlet weak var logOutButton: UIBarButtonItem!
     @IBOutlet weak var monthLabel: UILabel!
+    
+    var desiredDate = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +35,7 @@ class MainViewController: UIViewController{
         // Do any additional setup after loading the view.
     }
     
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -68,8 +73,46 @@ extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
         // This function should have the same code as the cellForItemAt function
         let cell = cell as! CustomCell
         cell.dateLabel.text = cellState.text
-        print("hi")
     }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        let cell = cell as! CustomCell
+        cell.backgroundColor = UIColor.magenta
+        self.desiredDate = formatter.dateFormat
+        print("what is the desired date? \(self.desiredDate) or what is the date in the func? \(date)")
+        checkForExistingEvents()
+    }
+    
+    func checkForExistingEvents(){
+        if (model.numberEventsOnDay(date: self.desiredDate) == 0){
+            self.seeEventButton.isEnabled = true
+        }else{
+            self.seeEventButton.isEnabled = false
+        }
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        let cell = cell as! CustomCell
+        cell.backgroundColor = UIColor(displayP3Red: 52, green: 45, blue: 89, alpha: 0)
+        self.desiredDate = ""
+        checkForExistingEvents()
+    }
+    
+    func displayEvents(cell:CustomCell){
+        
+    }
+    
+    @IBAction func seeEvent(_ sender: Any) {
+        self.performSegue(withIdentifier: "EventsOfDay", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destSeeEventsVC = segue.destination as! EventsOfDayTableViewController
+        
+        destSeeEventsVC.selectedDate = self.desiredDate
+    }
+    
+    
 }
     
     
