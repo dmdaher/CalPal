@@ -10,6 +10,7 @@ import UIKit
 
 class EventsOfDayTableViewController: UITableViewController {
 
+
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     let model:EventsModel = EventsModel.sharedInstance
     
@@ -18,7 +19,7 @@ class EventsOfDayTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
+        print("in EventsOFDayVC, the selectedDate passed in is: \(self.selectedDate)")
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -49,8 +50,7 @@ class EventsOfDayTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        
-        return model.numberEventsOnDay(date: selectedDate)
+        return model.numberEventsOnDay(date: self.selectedDate)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -59,11 +59,16 @@ class EventsOfDayTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "allEvents", for: indexPath)
-
-        let e1:Event = (model.eventAtIndex(date: selectedDate, index: indexPath.row))!
+        
+        let e1:Event = (model.eventAtIndex(date: self.selectedDate, index: indexPath.row))!
         let tableCellText = e1.title
+        let detailTableCellText = e1.startTime
+        cell.detailTextLabel?.text = detailTableCellText
         cell.textLabel?.text = tableCellText
-        cell.textLabel?.numberOfLines = 0
+        //cell.textLabel?.textColor = UIColor.white
+        print("what is the start time? \(e1.startTime)" )
+        //cell.detailTextLabel?.text = e1.startTime + e1.period + " - " + e1.endTime + " " + e1.period
+        cell.backgroundColor = e1.color
         
         return cell
     }

@@ -9,7 +9,10 @@
 import Foundation
 import UIKit
 
-class Event: NSObject{
+class Event: NSObject, NSCoding{
+    
+
+    
     override init(){
         self.title = "default"
         self.color = UIColor.blue
@@ -31,5 +34,30 @@ class Event: NSObject{
     var startTime : String
     var endTime : String
     var period: String
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(title, forKey: "title")
+        aCoder.encode(color, forKey: "color")
+        aCoder.encode(startTime, forKey: "startTime")
+        aCoder.encode(endTime, forKey: "endTime")
+        aCoder.encode(period, forKey: "period")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.title = aDecoder.decodeObject(forKey: "title") as! String
+        self.color = aDecoder.decodeObject(forKey: "color") as! UIColor
+        self.startTime = aDecoder.decodeObject(forKey: "startTime") as! String
+        self.endTime = aDecoder.decodeObject(forKey: "endTime") as! String
+        self.period = aDecoder.decodeObject(forKey: "period") as! String
+    }
+    
+    func initWithCoder(aDecoder: NSCoder) -> Event{
+        self.title = aDecoder.decodeObject(forKey: "title") as! String
+        self.color = aDecoder.decodeObject(forKey: "color") as! UIColor
+        self.startTime = aDecoder.decodeObject(forKey: "startTime") as! String
+        self.endTime = aDecoder.decodeObject(forKey: "endTime") as! String
+        self.period = aDecoder.decodeObject(forKey: "period") as! String
+        return self
+    }
 
 }

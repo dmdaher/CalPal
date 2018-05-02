@@ -81,9 +81,9 @@ extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         let cell = cell as! CustomCell
         cell.backgroundColor = UIColor.magenta
-        self.desiredDate = String(describing: date)
-        //self.desiredDate = formatter.dateFormat
-        print("what is the desired date? \(self.desiredDate) or what is the date in the func? \(date)")
+//        self.desiredDate = String(describing: date)
+        self.desiredDate = formatter.string(from: date)
+        print("what is the desired date? \(self.desiredDate)")
         checkForExistingEvents()
     }
     
@@ -116,8 +116,11 @@ extension MainViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
             let destSeeEventsVC = nav.topViewController as! EventsOfDayTableViewController
             destSeeEventsVC.selectedDate = self.desiredDate
         }
+        else if segue.identifier == "AddEvent"{
+            let addVC = segue.destination as! AddEventViewController
+            addVC.selectedDate = self.desiredDate
+        }
     }
-    
 }
     
     
