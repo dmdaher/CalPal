@@ -64,8 +64,8 @@ class EventsModel: NSObject{
     }
     
     func addEvents(date:String, event: Event){
-        print("the event date here is: \(date) and the event title is \(event.title)")
-        guard var currEventArr = events[date] else{
+        let userDefaults = UserDefaults.standard
+        guard let savedEventArr:Data = userDefaults.object(forKey: date) as? Data else{
             print("in the else of the guard....")
             var newArr = [Event]()
             newArr.append(event)
@@ -77,17 +77,44 @@ class EventsModel: NSObject{
             print("######### the dictionary count is now: \(events.count) and the array size at this date is: \(newArr.count)")
             return
         }
-        currEventArr.append(event)
-        events[date] = currEventArr
+        var currUnpackedEvents:[Event] = NSKeyedUnarchiver.unarchiveObject(with: savedEventArr) as! [Event]
+        print("the event date here is: \(date) and the event title is \(event.title)")
+        currUnpackedEvents.append(event)
+        events[date] = currUnpackedEvents
         
-        
-        let encodedNewArr = NSKeyedArchiver.archivedData(withRootObject: currEventArr)
-        let userDefaults = UserDefaults.standard
+        //save the new array of events to local machine
+        let encodedNewArr = NSKeyedArchiver.archivedData(withRootObject: currUnpackedEvents)
         userDefaults.set(encodedNewArr, forKey: date)
         userDefaults.synchronize()
-        print("######### the dictionary count is now: \(currEventArr.count) and the array size at this date is: \(currEventArr.count)")
+        print("######### the dictionary count is now: \(currUnpackedEvents.count) and the array size at this date is: \(currUnpackedEvents.count)")
         userDefaults.synchronize()
     }
+    
+//    func addEvents(date:String, event: Event){
+//        print("the event date here is: \(date) and the event title is \(event.title)")
+//        guard var currEventArr = events[date] else{
+//            print("in the else of the guard....")
+//            var newArr = [Event]()
+//            newArr.append(event)
+//            events[date] = newArr
+//            let encodedNewArr = NSKeyedArchiver.archivedData(withRootObject: newArr)
+//            let userDefaults = UserDefaults.standard
+//            userDefaults.set(encodedNewArr, forKey: date)
+//            userDefaults.synchronize()
+//            print("######### the dictionary count is now: \(events.count) and the array size at this date is: \(newArr.count)")
+//            return
+//        }
+//        currEventArr.append(event)
+//        events[date] = currEventArr
+//
+//
+//        let encodedNewArr = NSKeyedArchiver.archivedData(withRootObject: currEventArr)
+//        let userDefaults = UserDefaults.standard
+//        userDefaults.set(encodedNewArr, forKey: date)
+//        userDefaults.synchronize()
+//        print("######### the dictionary count is now: \(currEventArr.count) and the array size at this date is: \(currEventArr.count)")
+//        userDefaults.synchronize()
+//    }
     
     func removeEvent(date: String, index: Int){
         guard var dayEventsArray = events[date] else{return}
