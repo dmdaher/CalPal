@@ -43,18 +43,24 @@ class EventsModel: NSObject{
     //grabs total number of events for a certain day
     func numberEventsOnDay(date:String) -> Int{
         print("in numberEventsOnDay and date is: \(date)")
-        guard let dayEventsArray = events[date] else{return 0}
-        print("the count is : \(dayEventsArray.count)")
-        return dayEventsArray.count
+        //guard let dayEventsArray = events[date] else{return 0}
+        //print("the count is : \(dayEventsArray.count)")
+        
+        let userDefaults = UserDefaults.standard
+        guard let eventDataEncoded:Data = userDefaults.object(forKey: date) as? Data else{return 0}
+        print("nothing here :(")
+        let unpackedEvent:[Event] = NSKeyedUnarchiver.unarchiveObject(with: eventDataEncoded) as! [Event]
+        return unpackedEvent.count
+        //return dayEventsArray.count
     }
     
-    func getEvents(date:String) -> [Event]?{
+    func getEvents(date:String, index:Int) -> Event{
         
-        guard var eventDataEncoded: [NSData] = UserDefaults.standard.object(forKey: date) as? [NSData] else{return nil}
-        
-        let unpackedEvent: [Event] = NSKeyedUnarchiver.unarchiveObject(with: eventDataEncoded[0] as Data) as! [Event]
-        
-        return unpackedEvent
+        let userDefaults = UserDefaults.standard
+        let eventDataEncoded:Data = userDefaults.object(forKey: date) as! Data
+        let unpackedEvent:[Event] = NSKeyedUnarchiver.unarchiveObject(with: eventDataEncoded) as! [Event]
+        print("Returning the unpacked event with title: \(unpackedEvent[0].title)")
+        return unpackedEvent[index]
     }
     
     func addEvents(date:String, event: Event){
@@ -74,16 +80,12 @@ class EventsModel: NSObject{
         currEventArr.append(event)
         events[date] = currEventArr
         
-//        let encodedTitle = NSKeyedArchiver.archivedData(withRootObject: event.title)
-//        let encodedColor = NSKeyedArchiver.archivedData(withRootObject: event.color)
-//        let encodedStartTime = NSKeyedArchiver.archivedData(withRootObject: event.startTime)
-//        let encodedEndTime = NSKeyedArchiver.archivedData(withRootObject: event.endTime)
-//        let encodedPeriod = NSKeyedArchiver.archivedData(withRootObject: event.period)
         
         let encodedNewArr = NSKeyedArchiver.archivedData(withRootObject: currEventArr)
-        
         let userDefaults = UserDefaults.standard
         userDefaults.set(encodedNewArr, forKey: date)
+        userDefaults.synchronize()
+        print("######### the dictionary count is now: \(currEventArr.count) and the array size at this date is: \(currEventArr.count)")
         userDefaults.synchronize()
     }
     

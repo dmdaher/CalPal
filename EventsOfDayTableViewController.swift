@@ -60,7 +60,9 @@ class EventsOfDayTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "allEvents", for: indexPath)
         
-        let e1:Event = (model.eventAtIndex(date: self.selectedDate, index: indexPath.row))!
+       
+        let e1:Event =  model.getEvents(date: self.selectedDate, index: indexPath.row)
+//        let e1:Event = (model.eventAtIndex(date: self.selectedDate, index: indexPath.row))!
         let tableCellText = e1.title
         let detailTableCellText = e1.startTime
         cell.detailTextLabel?.text = detailTableCellText
